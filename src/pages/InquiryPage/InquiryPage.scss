@@ -1,3 +1,15 @@
-// .rc-tree .rc-tree-treenode span.rc-tree-iconEle .rc-tree-icon__open {
-//     background-image: ;
-// }
+
+
+.inquiries {
+
+    &__container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__form-field {
+        display: flex;
+        flex-direction: column;
+    }
+
+}
