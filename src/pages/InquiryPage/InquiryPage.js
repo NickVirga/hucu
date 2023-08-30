@@ -6,46 +6,138 @@ import "react-phone-number-input/style.css";
 import { useState } from "react";
 
 function InquiryPage() {
-  const [formData, setFormData] = useState({ scheduledTime: new Date() });
-  const [phoneNumDecorated, setPhoneNumDecorated] = useState("");
+  const [formData, setFormData] = useState({});
+  // const [phoneNumDecorated, setPhoneNumDecorated] = useState("");
 
 
   const treeData = [
     {
       key: "1",
-      title: "Food",
+      title: "Balances",
       children: [
         {
-          key: "2",
-          title: "Burger",
+          key: "1-1",
+          title: "Chequing",
         },
         {
-          key: "3",
-          title: "Salad",
-          children: [
-            {
-              key: "4",
-              title: "Tomatoes",
-            },
-            {
-              key: "5",
-              title: "Cabbage",
-            },
-          ],
+          key: "1-2",
+          title: "Savings",
         },
       ],
     },
     {
-      key: "6",
-      title: "Drinks",
+      key: "2",
+      title: "Transfers",
       children: [
         {
-          key: "7",
-          title: "Beer",
+          key: "2-1",
+          title: "Wire Transfer",
+          children: [
+            {
+              key: "2-1-1",
+              title: "International",
+            },
+            {
+              key: "2-1-2",
+              title: "Domestic",
+            },
+          ],
         },
         {
-          key: "8",
-          title: "Soft drink",
+          key: "2-2",
+          title: "Bank Transfer",
+        },
+      ],
+    },
+    {
+      key: "3",
+      title: "Bill Payments",
+    },
+    {
+      key: "4",
+      title: "Mortgages",
+    },
+    {
+      key: "5",
+      title: "Mutual Fund",
+    },
+    {
+      key: "6",
+      title: "Credit Card",
+      children: [
+        {
+          key: "6-1",
+          title: "Change Limit",
+        },
+        {
+          key: "6-2",
+          title: "Suspicious Activity",
+        },
+        {
+          key: "6-3",
+          title: "Report Card Lost or Stolen",
+        },
+        {
+          key: "6-4",
+          title: "Suspicious Activity",
+        },
+      ],
+    },
+    {
+      key: "7",
+      title: "Loan",
+    },
+    {
+      key: "8",
+      title: "Line of Credit",
+      children: [
+        {
+          key: "8-1",
+          title: "Interest rates",
+        },
+        {
+          key: "8-2",
+          title: "Suspicious Activity",
+        },
+      ],
+    },
+    {
+      key: "9",
+      title: "Investments",
+    },
+    {
+      key: "10",
+      title: "Online Banking Technical Support",
+      children: [
+        {
+          key: "10-1",
+          title: "Password Reset",
+        },
+        {
+          key: "10-2",
+          title: "Account Lockouts",
+        },
+        {
+          key: "10-3",
+          title: "Website Inaccesible",
+        },
+      ],
+    },
+    {
+      key: "11",
+      title: "Complaints and Feedback",
+      children: [
+        {
+          key: "11-1",
+          title: "Service Quality",
+        },
+        {
+          key: "11-2",
+          title: "Dispute About Fees",
+        },
+        {
+          key: "11-3",
+          title: "Issues With Bank Representatives",
         },
       ],
     },
@@ -53,6 +145,7 @@ function InquiryPage() {
 
   const selectHandler = (selectedKeys, { node }) => {
     console.log(node);
+    setFormData({ ...formData, ["inquiryOption"]: node.title });
   };
 
   const handleFormSubmit = (event) => {

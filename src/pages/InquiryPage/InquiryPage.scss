@@ -5,6 +5,7 @@
     &__container {
         display: flex;
         justify-content: space-between;
+        user-select: none;
     }
 
     &__form-field {
