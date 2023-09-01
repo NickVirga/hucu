@@ -14,11 +14,11 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<InquiryPage />} />
-        <Route path="/inquiries" element={<InquiryPage />} />
-        <Route path="/inquiries/:inquiryId" element={<InquiryPage />} />
+        {/* <Route path="/inquiries" element={<InquiryPage />} />
+        <Route path="/inquiries/:inquiryId" element={<InquiryPage />} /> */}
         <Route path="/tickets/:ticketId" element={<TicketStatusPage />} />
-        <Route path="/organizations" element={<OrganizationPage />} />
-        <Route path="/organizations/:organizationId" element={<OrganizationPage />} />
+        <Route path="/organization" element={<OrganizationPage />} />
+        <Route path="/organization/:organizationId" element={<OrganizationPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
