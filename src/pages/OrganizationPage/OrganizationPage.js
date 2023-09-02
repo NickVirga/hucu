@@ -331,10 +331,6 @@ function OrganizationPage() {
             <span>Closed At: </span>
             <span>{ticket.closed_at}</span>
           </div>
-          <div className="organization__closed-at-detail">
-            <span>Closed At: </span>
-            <span>{ticket.closed_at}</span>
-          </div>
           <div className="organization__agent-list">
           <span>Assigned Agent: </span>
             <select value={ticket.agent_id} onChange={handleAgentChange}>

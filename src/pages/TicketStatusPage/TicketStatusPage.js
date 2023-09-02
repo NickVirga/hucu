@@ -11,7 +11,11 @@ function TicketStatusPage() {
 
   useEffect(() => {
     axios
-      .get(urlTicketById(ticketId))
+      .get(urlTicketById(ticketId), {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.authToken}`,
+        },
+      })
       .then((response) => {
         setTicket(response.data);
       })

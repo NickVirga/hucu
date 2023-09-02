@@ -14,3 +14,14 @@ export const urlAllAgentsByOrgId = (orgId) => {
   return `${process.env.REACT_APP_BASE_URL}/api/agents?o=${orgId}`;
 };
 
+export const urlSignup = () => {
+  return `${process.env.REACT_APP_BASE_URL}/api/auth/signup`;
+};
+
+export const urlLogin = () => {
+  return `${process.env.REACT_APP_BASE_URL}/api/auth/login`;
+};
+
+export const urlUsers = () => {
+  return `${process.env.REACT_APP_BASE_URL}/api/users`;
+};

@@ -1,7 +1,42 @@
-
 .header {
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+  }
 
-    &__title {
-        user-select: none;
+  &__logo-link {
+    text-decoration: none;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    color: black;
+  }
+
+  &__title {
+    user-select: none;
+  }
+
+  &__logo-image {
+    height: 3rem;
+    width: 3rem;
+    user-select: none;
+  }
+
+  &__login-container {
+    display: flex;
+  }
+
+  &__loginout {
+    cursor: pointer;
+    user-select: none;
+    padding-left: 0.4rem;
+
+    &:hover {
+      text-decoration: underline;
     }
+  }
 }

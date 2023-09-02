@@ -1,0 +1,55 @@
+.signup-login {
+  &__container {
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 1;
+  }
+
+  &__form {
+    padding: 1rem;
+    width: 200px;
+    border: 1px solid white;
+    background-color: paleturquoise;
+    position: absolute;
+    top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__close-btn {
+    align-self: flex-end;
+    height: 1.5rem;
+    width: 1.5rem;
+    cursor: pointer;
+    path,
+    circle {
+      stroke: red;
+    }
+
+    &:hover {
+      fill: red;
+    }
+  }
+
+  &__controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__switch-mode {
+    cursor: pointer;
+    align-self: center;
+    font-size: 0.7rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

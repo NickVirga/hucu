@@ -3,12 +3,24 @@ import Tree from "rc-tree";
 import "rc-tree/assets/index.css";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { urlAllTickets } from "../../utils/api-utils";
+import { useNavigate } from "react-router-dom";
 
-function InquiryPage() {
+function InquiryPage({ userInfo }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({});
-  // const [phoneNumDecorated, setPhoneNumDecorated] = useState("");
 
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      client_first_name: userInfo.first_name,
+      client_last_name: userInfo.last_name,
+      client_email: userInfo.email,
+      client_phone_number: userInfo.phone_number,
+    });
+  }, [userInfo]);
 
   const treeData = [
     {
@@ -145,24 +157,51 @@ function InquiryPage() {
 
   const selectHandler = (selectedKeys, { node }) => {
     console.log(node);
-    setFormData({ ...formData, ["inquiryOption"]: node.title });
+    setFormData({ ...formData, inquiry_option: node.title });
   };
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    console.log(formData);
+
+    const reqBody = (({
+      inquiry_option,
+      client_first_name,
+      client_last_name,
+      client_phone_number,
+      client_email,
+      client_notes,
+      scheduled_at
+    }) => ({
+      inquiry_option,
+      client_first_name,
+      client_last_name,
+      client_phone_number,
+      client_email,
+      client_notes,
+      scheduled_at,
+    }))(formData);
+
+    reqBody.status="Open"
+
+    axios
+      .post(urlAllTickets(), reqBody)
+      .then((response) => {
+        navigate(`/tickets/${response.data[0].id}`)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleInputChange = (event) => {
-
     const { name, value } = event.target;
+    console.log(value);
     setFormData({ ...formData, [name]: value });
-
   };
 
   const handlePhoneNumChange = (event) => {
-    setFormData({ ...formData, ["phoneNumber"]: event });
-  }
+    setFormData({ ...formData, client_phone_number: event });
+  };
 
   return (
     <div className="inquiries__container">
@@ -181,10 +220,49 @@ function InquiryPage() {
           <input
             type="text"
             id="inquiryOption"
-            name="inquiryOption"
+            name="inquiry_option"
             placeholder="Select an option..."
-            value={formData.inquiryOption}
+            value={formData.inquiry_option}
             className="inquiries__form-option-input"
+            onChange={handleInputChange}
+          ></input>
+        </div>
+        <div className="inquiries__form-field">
+          <label className="inquiries__form-label" htmlFor="firstName">
+            First Name
+          </label>
+          <input
+            type="text"
+            id="firstName"
+            name="client_first_name"
+            value={formData.client_first_name}
+            className="inquiries__form-first-name-input"
+            onChange={handleInputChange}
+          ></input>
+        </div>
+        <div className="inquiries__form-field">
+          <label className="inquiries__form-label" htmlFor="lastName">
+            Last Name
+          </label>
+          <input
+            type="text"
+            id="lastName"
+            name="client_last_name"
+            value={formData.client_last_name}
+            className="inquiries__form-last-name-input"
+            onChange={handleInputChange}
+          ></input>
+        </div>
+        <div className="inquiries__form-field">
+          <label className="inquiries__form-label" htmlFor="email">
+            E-mail
+          </label>
+          <input
+            type="text"
+            id="email"
+            name="client_email"
+            value={formData.client_email}
+            className="inquiries__form-email-input"
             onChange={handleInputChange}
           ></input>
         </div>
@@ -194,8 +272,8 @@ function InquiryPage() {
           </label>
           <PhoneInput
             id="phoneNumber"
-            name="phoneNumber"
-            value={formData.phoneNumber}
+            name="client_phone_number"
+            value={formData.client_phone_number}
             onChange={handlePhoneNumChange}
           ></PhoneInput>
         </div>
@@ -206,10 +284,10 @@ function InquiryPage() {
           <input
             type="time"
             id="scheduledTime"
-            name="scheduledTime"
+            name="scheduled_at"
             min="07:00"
             max="19:00"
-            value={formData.scheduledTime}
+            value={formData.scheduled_at}
             className="inquiries__form-phone-input"
             onChange={handleInputChange}
           ></input>
@@ -221,7 +299,7 @@ function InquiryPage() {
           <textarea
             className="inquiries__form-comment-input"
             id="comment"
-            name="comment"
+            name="client_notes"
             placeholder="Please enter any comments..."
             maxLength="100"
             value={formData.comment}

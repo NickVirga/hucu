@@ -1,0 +1,14 @@
+
+.footer {
+
+    &__container {
+        display: flex;
+        justify-content: center;
+        padding-top: 8rem;
+    }
+
+    &__content {
+        font-size: 0.7rem;
+    }
+
+}
