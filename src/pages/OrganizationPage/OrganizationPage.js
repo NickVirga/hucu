@@ -108,9 +108,7 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
         },
       })
       .then((response) => {
-        // if (response.data.length > 0) {
           setAgents(response.data);
-        // }
       })
       .catch((err) => {
         console.log(err);

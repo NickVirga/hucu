@@ -13,7 +13,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
-    if (isLoggedIn && userInfo.role === "agent")
+    if (isLoggedIn && (userInfo.role === "agent" || userInfo.role === "dispatcher"))
       navigate(`/organization/${userInfo.organization_id}`);
   }, [userInfo.role, isLoggedIn]);
 
@@ -232,6 +232,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
             value={formData.inquiry_option}
             className="inquiries__form-option-input"
             onChange={handleInputChange}
+            autocomplete="off"
           ></input>
         </div>
         <div className="inquiries__form-field">
@@ -245,6 +246,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
             value={formData.client_first_name}
             className="inquiries__form-first-name-input"
             onChange={handleInputChange}
+            autocomplete="off"
           ></input>
         </div>
         <div className="inquiries__form-field">
@@ -258,6 +260,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
             value={formData.client_last_name}
             className="inquiries__form-last-name-input"
             onChange={handleInputChange}
+            autocomplete="off"
           ></input>
         </div>
         <div className="inquiries__form-field">
@@ -271,6 +274,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
             value={formData.client_email}
             className="inquiries__form-email-input"
             onChange={handleInputChange}
+            autocomplete="off"
           ></input>
         </div>
         <div className="inquiries__form-field">
@@ -282,6 +286,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
             name="client_phone_number"
             value={formData.client_phone_number}
             onChange={handlePhoneNumChange}
+            autocomplete="off"
           ></PhoneInput>
         </div>
         <div className="inquiries__form-field">
@@ -297,6 +302,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
             value={formData.scheduled_at}
             className="inquiries__form-phone-input"
             onChange={handleInputChange}
+            autocomplete="off"
           ></input>
         </div>
         <div className="inquiries__form-field">
@@ -311,6 +317,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
             maxLength="100"
             value={formData.comment}
             onChange={handleInputChange}
+            autocomplete="off"
           ></textarea>
         </div>
         <button className="inquiries__form-submit-btn" type="submit">

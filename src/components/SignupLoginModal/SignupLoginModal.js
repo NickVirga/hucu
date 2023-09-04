@@ -20,36 +20,36 @@ function SignupLoginModal({
         />
         <div className="signup-login__username">
           <label>Username:</label>
-          <input name="username"></input>
+          <input name="username" autocomplete="off"></input>
         </div>
 
         <div className="signup-login__password">
           <label>Password:</label>
-          <input name="password"></input>
+          <input name="password" autocomplete="off" type="password"></input>
         </div>
 
         {loginSignupMode && (
           <div className="signup-login__first-name">
             <label>First Name:</label>
-            <input name="first_name"></input>
+            <input name="first_name" autocomplete="off"></input>
           </div>
         )}
         {loginSignupMode && (
           <div className="signup-login__last-name">
             <label>Last Name:</label>
-            <input name="last_name"></input>
+            <input name="last_name" autocomplete="off"></input>
           </div>
         )}
         {loginSignupMode && (
           <div className="signup-login__phone-number">
             <label>Phone Number:</label>
-            <input name="phone_number"></input>
+            <input name="phone_number" autocomplete="off"></input>
           </div>
         )}
         {loginSignupMode && (
           <div className="signup-login__email">
             <label>E-mail:</label>
-            <input name="email"></input>
+            <input name="email" autocomplete="off"></input>
           </div>
         )}
         <button className="signup-login__submit-btn" type="submit">
