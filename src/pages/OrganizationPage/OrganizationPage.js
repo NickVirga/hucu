@@ -13,7 +13,6 @@ import { ReactComponent as CloseIcon } from "../../assets/icons/close-circle-svg
 
 function OrganizationPage({ userInfo, isLoggedIn }) {
   const navigate = useNavigate();
-  const agentId = "1";
   const { organizationId } = useParams();
   const [data, setData] = useState([]);
   const [ticket, setTicket] = useState({});
@@ -102,19 +101,18 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
 
     if (userInfo.role === "dispatcher") {
       axios
-      .get(urlAllAgents(), {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.authToken}`,
-        },
-      })
-      .then((response) => {
+        .get(urlAllAgents(), {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.authToken}`,
+          },
+        })
+        .then((response) => {
           setAgents(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-    
   }, []);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -147,9 +145,37 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
   };
 
   const submitHandler = (event) => {
-    console.log(ticket);
+    const reqBody = (({
+      agent_id,
+      agent_notes,
+      client_email,
+      client_first_name,
+      client_last_name,
+      client_notes,
+      client_phone_number,
+      id,
+      inquiry_option,
+      scheduled_at,
+      status,
+    }) => ({
+      agent_id,
+      agent_notes,
+      client_email,
+      client_first_name,
+      client_last_name,
+      client_notes,
+      client_phone_number,
+      id,
+      inquiry_option,
+      scheduled_at,
+      status,
+    }))(ticket);
     axios
-      .put(urlTicketById(ticket.id), ticket)
+      .put(urlTicketById(ticket.id), reqBody, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.authToken}`,
+        },
+      })
       .then((response) => {
         setShowModal(false);
       })
@@ -304,14 +330,23 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
             <span>Closed At: </span>
             <span>{ticket.closed_at}</span>
           </div>
-          {userInfo.role === "dispatcher" && <div className="organization__agent-list">
-            <span>Assigned Agent: </span>
-            <select value={ticket.agent_id} onChange={handleAgentChange}>
-              {agents.map((agent) => {
-                return <option key={agent.id}>{agent.id}</option>;
-              })}
-            </select>
-          </div>}
+          {userInfo.role === "dispatcher" && (
+            <div className="organization__agent-list">
+              <span>Assigned Agent: </span>
+              <select
+                value={`${ticket.last_name}, ${ticket.first_name}`}
+                onChange={handleAgentChange}
+              >
+                {agents.map((agent) => {
+                  return (
+                    <option key={agent.agent_id}>
+                      {agent.last_name}, {agent.first_name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          )}
           <button
             className="organization__modal-save-btn"
             type="submit"

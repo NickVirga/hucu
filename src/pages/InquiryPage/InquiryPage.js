@@ -194,7 +194,8 @@ function InquiryPage({ userInfo, isLoggedIn }) {
         },
       })
       .then((response) => {
-        navigate(`/tickets/${response.data[0].id}`);
+        console.log(response.data)
+        navigate(`/tickets/${response.data.id}`);
       })
       .catch((err) => {
         console.log(err);

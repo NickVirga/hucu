@@ -17,6 +17,7 @@ function TicketStatusPage() {
         },
       })
       .then((response) => {
+        console.log(response.data)
         setTicket(response.data);
       })
       .catch((err) => {
