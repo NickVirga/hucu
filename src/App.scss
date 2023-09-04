@@ -1,9 +1,15 @@
+@import './styles/partials/typography';
+@import './styles/partials/variables.scss';
 
+*,
+*::before,
+*::after {
+  margin: 0;
+  box-sizing: border-box;
+}
 
 
 body {
-    margin: 0;
-    // padding: 2rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: lightgreen;
+    font-family: "Figtree";
+    background-color: $background-color1;
 }

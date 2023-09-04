@@ -7,26 +7,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { urlAllTickets } from "../../utils/api-utils";
 import { useNavigate } from "react-router-dom";
+import { ReactComponent as PlusIcon } from "../../assets/icons/plus-icon.svg";
+import { ReactComponent as MinusIcon } from "../../assets/icons/minus-icon.svg";
 
 function InquiryPage({ userInfo, isLoggedIn }) {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({});
-
-  useEffect(() => {
-    if (isLoggedIn && (userInfo.role === "agent" || userInfo.role === "dispatcher"))
-      navigate(`/organization/${userInfo.organization_id}`);
-  }, [userInfo.role, isLoggedIn]);
-
-  useEffect(() => {
-    setFormData({
-      ...formData,
-      client_first_name: userInfo.first_name,
-      client_last_name: userInfo.last_name,
-      client_email: userInfo.email,
-      client_phone_number: userInfo.phone_number,
-    });
-  }, [userInfo]);
-
   const treeData = [
     {
       key: "1",
@@ -160,9 +144,56 @@ function InquiryPage({ userInfo, isLoggedIn }) {
     },
   ];
 
-  const selectHandler = (selectedKeys, { node }) => {
-    setFormData({ ...formData, inquiry_option: node.title });
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredTreeData, setFilteredTreeData] = useState(treeData);
+  const [selectedNodeKeys, setSelectedNodeKeys] = useState([]);
+  const [selectedNodePath, setSelectedNodePath] = useState([]);
+
+  useEffect(() => {
+    if (
+      isLoggedIn &&
+      (userInfo.role === "agent" || userInfo.role === "dispatcher")
+    )
+      navigate(`/organization/${userInfo.organization_id}`);
+  }, [userInfo.role, isLoggedIn]);
+
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      client_first_name: userInfo.first_name,
+      client_last_name: userInfo.last_name,
+      client_email: userInfo.email,
+      client_phone_number: userInfo.phone_number,
+    });
+  }, [userInfo]);
+
+  const filterData = (data, keyword) => {
+    return data
+      .map((node) => {
+        if (node.children) {
+          const filteredChildren = filterData(node.children, keyword);
+          if (filteredChildren.length > 0) {
+            return {
+              ...node,
+              children: filteredChildren,
+            };
+          }
+        }
+        if (node.title.toLowerCase().includes(keyword.toLowerCase())) {
+          return node;
+        }
+        return null;
+      })
+      .filter(Boolean);
   };
+
+  const selectHandler = (selectedKeys, {node}) => {
+    setFormData({...formData, ["inquiry_option"]: node.title})
+
+  };
+
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -194,7 +225,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
         },
       })
       .then((response) => {
-        console.log(response.data)
+        console.log(response.data);
         navigate(`/tickets/${response.data.id}`);
       })
       .catch((err) => {
@@ -211,19 +242,47 @@ function InquiryPage({ userInfo, isLoggedIn }) {
     setFormData({ ...formData, client_phone_number: event });
   };
 
+  const getSwitcherIcon = ({ isLeaf, expanded }) => {
+    if (!isLeaf) {
+      if (expanded) {
+        return <MinusIcon className="inquiries__minus-icon" />;
+      } else {
+        return <PlusIcon className="inquiries__plus-icon" />;
+      }
+    }
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  useEffect(() => {
+    setFilteredTreeData(filterData(treeData, searchTerm));
+  }, [searchTerm]);
+
   return (
     <div className="inquiries__container">
+      <input
+        className="inquiries__search"
+        type="text"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        placeholder="Search..."
+      ></input>
       <Tree
         showLine
         selectable
-        treeData={treeData}
+        treeData={filteredTreeData}
         onSelect={selectHandler}
+        selectedKeys={selectedNodeKeys}
         showIcon={false}
+        switcherIcon={getSwitcherIcon}
+        className="inquiries__tree"
       />
-      <form onSubmit={handleFormSubmit}>
+      <form className="inquiries__form" onSubmit={handleFormSubmit}>
         <div className="inquiries__form-field">
           <label className="inquiries__form-label" htmlFor="inquiryOption">
-            Inquiry Option
+            Inquiry Option:
           </label>
           <input
             type="text"
@@ -233,40 +292,42 @@ function InquiryPage({ userInfo, isLoggedIn }) {
             value={formData.inquiry_option}
             className="inquiries__form-option-input"
             onChange={handleInputChange}
-            autocomplete="off"
+            autoComplete="off"
           ></input>
         </div>
-        <div className="inquiries__form-field">
-          <label className="inquiries__form-label" htmlFor="firstName">
-            First Name
-          </label>
-          <input
-            type="text"
-            id="firstName"
-            name="client_first_name"
-            value={formData.client_first_name}
-            className="inquiries__form-first-name-input"
-            onChange={handleInputChange}
-            autocomplete="off"
-          ></input>
-        </div>
-        <div className="inquiries__form-field">
-          <label className="inquiries__form-label" htmlFor="lastName">
-            Last Name
-          </label>
-          <input
-            type="text"
-            id="lastName"
-            name="client_last_name"
-            value={formData.client_last_name}
-            className="inquiries__form-last-name-input"
-            onChange={handleInputChange}
-            autocomplete="off"
-          ></input>
+        <div className="inquiries__name-container">
+          <div className="inquiries__form-field-first-name">
+            <label className="inquiries__form-label" htmlFor="firstName">
+              First Name:
+            </label>
+            <input
+              type="text"
+              id="firstName"
+              name="client_first_name"
+              value={formData.client_first_name}
+              className="inquiries__form-first-name-input"
+              onChange={handleInputChange}
+              autoComplete="off"
+            ></input>
+          </div>
+          <div className="inquiries__form-field-last-name">
+            <label className="inquiries__form-label" htmlFor="lastName">
+              Last Name:
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              name="client_last_name"
+              value={formData.client_last_name}
+              className="inquiries__form-last-name-input"
+              onChange={handleInputChange}
+              autoComplete="off"
+            ></input>
+          </div>
         </div>
         <div className="inquiries__form-field">
           <label className="inquiries__form-label" htmlFor="email">
-            E-mail
+            E-mail:
           </label>
           <input
             type="text"
@@ -275,24 +336,25 @@ function InquiryPage({ userInfo, isLoggedIn }) {
             value={formData.client_email}
             className="inquiries__form-email-input"
             onChange={handleInputChange}
-            autocomplete="off"
+            autoComplete="off"
           ></input>
         </div>
         <div className="inquiries__form-field">
           <label className="inquiries__form-label" htmlFor="phoneNumber">
-            Phone Number
+            Phone Number:
           </label>
           <PhoneInput
             id="phoneNumber"
             name="client_phone_number"
             value={formData.client_phone_number}
             onChange={handlePhoneNumChange}
-            autocomplete="off"
+            autoComplete="off"
+            className="inquiries__form-phone-number-input"
           ></PhoneInput>
         </div>
         <div className="inquiries__form-field">
           <label className="inquiries__form-label" htmlFor="scheduledTime">
-            Scheduled Time
+            Scheduled Time:
           </label>
           <input
             type="time"
@@ -301,14 +363,14 @@ function InquiryPage({ userInfo, isLoggedIn }) {
             min="07:00"
             max="19:00"
             value={formData.scheduled_at}
-            className="inquiries__form-phone-input"
+            className="inquiries__form-time-input"
             onChange={handleInputChange}
-            autocomplete="off"
+            autoComplete="off"
           ></input>
         </div>
         <div className="inquiries__form-field">
           <label className="inquiries__form-label" htmlFor="comment">
-            Comment
+            Comment:
           </label>
           <textarea
             className="inquiries__form-comment-input"
@@ -318,7 +380,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
             maxLength="100"
             value={formData.comment}
             onChange={handleInputChange}
-            autocomplete="off"
+            autoComplete="off"
           ></textarea>
         </div>
         <button className="inquiries__form-submit-btn" type="submit">

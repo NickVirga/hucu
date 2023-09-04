@@ -57,7 +57,6 @@ function App() {
     if (!isLoggedIn) {
       return;
     }
-
     axios
       .get(urlUsers(), {
         headers: {
@@ -101,7 +100,7 @@ function App() {
       <Header
         loginoutClickHandler={loginoutClickHandler}
         isLoggedIn={isLoggedIn}
-        username={userInfo.username}
+        userInfo={userInfo}
       />
       {showLoginModal && (
         <SignupLoginModal
@@ -127,7 +126,9 @@ function App() {
         /> */}
         <Route
           path="/organization/:organizationId"
-          element={<OrganizationPage userInfo={userInfo} isLoggedIn={isLoggedIn}/>}
+          element={
+            <OrganizationPage userInfo={userInfo} isLoggedIn={isLoggedIn} />
+          }
         />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

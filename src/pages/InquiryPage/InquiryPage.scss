@@ -1,16 +1,138 @@
-
+@use "../../styles/partials/variables" as *;
+@use "../../styles/partials/mixins" as *;
 
 .inquiries {
+  &__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    user-select: none;
+    padding: 0 1rem 1rem 1rem;
+  }
 
-    &__container {
-        display: flex;
-        justify-content: space-between;
-        user-select: none;
+  &__form-field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__tree {
+    padding-bottom: 1rem;
+  }
+
+  &__search {
+    font-family: "Figtree";
+    border: 1px solid $secondary-color2;
+    height: 1.75rem;
+    font-size: 1rem;
+
+    @include tablet {
+      width: 20rem;
     }
 
-    &__form-field {
-        display: flex;
-        flex-direction: column;
+    &:focus {
+      outline-style: none;
+      border: 1px solid $primary-color2;
     }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 100%;
+  }
+
+  &__form-field {
+    display: flex;
+  }
+
+  &__form-field-first-name {
+    @extend .inquiries__form-field;
+    width: 50%;
+  }
+
+  &__form-field-last-name {
+    @extend .inquiries__form-field;
+    width: 50%;
+  }
+
+  &__form-label {
+    font-size: 0.875rem;
+  }
+
+  &__form-input {
+    font-family: "Figtree";
+    border: 1px solid $secondary-color2;
+    
+
+    &:focus {
+      outline-style: none;
+      border: 1px solid $primary-color2;
+    }
+  }
+
+  
+
+  &__name-container{
+    display: flex;
+    gap: 1rem;
+  }
+
+
+  &__form-option-input {
+    @extend .inquiries__form-input;
+  }
+
+  &__form-first-name-input {
+    @extend .inquiries__form-input;
+  }
+
+  &__form-last-name-input {
+    @extend .inquiries__form-input;
+  }
+
+  &__form-email-input {
+    @extend .inquiries__form-input;
+  }
+
+  &__form-phone-number-input input {
+    @extend .inquiries__form-input;
+  }
+
+  &__form-time-input {
+    @extend .inquiries__form-input;
+  }
+
+  &__form-comment-input {
+    @extend .inquiries__form-input;
+    padding: 0.25rem 0.25rem;
+    resize: none;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  &__form-submit-btn {
+    font-family: "Figtree";
+    cursor: pointer;
+    user-select: none;
+    color: $primary-color1;
+    background-color: $primary-color2;
+    border-radius: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    border: none;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; 
+    margin-top: 1rem;   
+
+    &:hover {
+        background-color: rgba($primary-color2, 0.7)
+    }
+
+  }
 
 }
+
+// .rc-tree-switcher {
+//     margin-right: 6px;
+// }

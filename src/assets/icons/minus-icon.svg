@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="svg-snoweb svg-theme-light" x="0" y="0" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+  <clipPath id="clip-path-202309-0409-4542-1d3bec64-1219-4020-a6d6-c24236e9574d">
+    <rect x="0" y="0" width="100" height="100" rx="15" ry="15"/>
+  </clipPath>
+  <g clip-path="url(#clip-path-202309-0409-4542-1d3bec64-1219-4020-a6d6-c24236e9574d)">
+    <rect x="0" y="0" width="100" height="100" rx="15" ry="15" fill="#FFE26A"/>
+  </g>
+  <g transform="translate(20.00, 20.00) scale(0.60, 0.60)">
+    <path d="M82.1,50H17.9" fill="none" stroke="#071d0b" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"/>
+  </g>
+</svg>
