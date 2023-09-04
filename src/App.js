@@ -45,7 +45,8 @@ function App() {
         email: e.target.email.value,
       })
       .then((response) => {
-        console.log(response);
+        e.target.reset();
+        setLoginSignupMode(false);
       })
       .catch((err) => {
         console.log(err);
@@ -55,17 +56,21 @@ function App() {
   useEffect(() => {
     if (!isLoggedIn) {
       return;
-    } 
+    }
 
-    axios.get(urlUsers(), {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.authToken}`
-      }
-    }).then(resp => {
-      setUserInfo(resp.data[0])
-    })
-
-  }, [isLoggedIn])
+    axios
+      .get(urlUsers(), {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.authToken}`,
+        },
+      })
+      .then((resp) => {
+        setUserInfo(resp.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [isLoggedIn]);
 
   const closeModalClickHandler = () => {
     setShowLoginModal(false);
@@ -75,7 +80,7 @@ function App() {
     e.preventDefault();
 
     if (loginSignupMode) {
-      // handleSignup(e);
+      handleSignup(e);
     } else {
       handleLogin(e);
     }
@@ -84,8 +89,8 @@ function App() {
   const loginoutClickHandler = (e) => {
     if (isLoggedIn) {
       sessionStorage.removeItem("authToken");
-      setUserInfo({});
       setIsLoggedIn(false);
+      setUserInfo({});
     } else {
       setShowLoginModal(true);
     }
@@ -93,22 +98,36 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header loginoutClickHandler={loginoutClickHandler} isLoggedIn={isLoggedIn} username={userInfo.username} />
-      {showLoginModal && <SignupLoginModal
-        closeModalClickHandler={closeModalClickHandler}
-        loginSignupMode={loginSignupMode}
-        loginSignupSubmitHandler={loginSignupSubmitHandler}
-        toggleLoginSignupMode={()=>{setLoginSignupMode(!loginSignupMode)}}
-      />}
+      <Header
+        loginoutClickHandler={loginoutClickHandler}
+        isLoggedIn={isLoggedIn}
+        username={userInfo.username}
+      />
+      {showLoginModal && (
+        <SignupLoginModal
+          closeModalClickHandler={closeModalClickHandler}
+          loginSignupMode={loginSignupMode}
+          loginSignupSubmitHandler={loginSignupSubmitHandler}
+          toggleLoginSignupMode={() => {
+            setLoginSignupMode(!loginSignupMode);
+          }}
+        />
+      )}
       <Routes>
-        <Route path="/" element={<InquiryPage userInfo={userInfo} />} />
+        <Route
+          path="/"
+          element={<InquiryPage userInfo={userInfo} isLoggedIn={isLoggedIn} />}
+        />
         {/* <Route path="/inquiries" element={<InquiryPage />} />
         <Route path="/inquiries/:inquiryId" element={<InquiryPage />} /> */}
         <Route path="/tickets/:ticketId" element={<TicketStatusPage />} />
-        <Route path="/organization" element={<OrganizationPage />} />
+        {/* <Route
+          path="/organization"
+          element={<OrganizationPage isLoggedIn={isLoggedIn} />}
+        /> */}
         <Route
           path="/organization/:organizationId"
-          element={<OrganizationPage />}
+          element={<OrganizationPage userInfo={userInfo} isLoggedIn={isLoggedIn}/>}
         />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

@@ -1,0 +1,13 @@
+.not-found {
+    &__container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1rem;
+    }
+  
+    &__subtitle {
+      font-size: 1.2rem;
+    }
+  }
+  

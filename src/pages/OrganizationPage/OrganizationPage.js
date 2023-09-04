@@ -2,18 +2,25 @@ import "./OrganizationPage.scss";
 import React from "react";
 import { useTable, useSortBy } from "react-table";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import { urlAllTicketsByOrgIdAgentId, urlAllAgentsByOrgId, urlTicketById } from "../../utils/api-utils";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  urlAllTickets,
+  urlAllAgents,
+  urlTicketById,
+} from "../../utils/api-utils";
 import { useState, useEffect } from "react";
 import { ReactComponent as CloseIcon } from "../../assets/icons/close-circle-svgrepo-com.svg";
 
-function OrganizationPage() {
-  const agentId = "1"
+function OrganizationPage({ userInfo, isLoggedIn }) {
+  const navigate = useNavigate();
+  const agentId = "1";
   const { organizationId } = useParams();
   const [data, setData] = useState([]);
   const [ticket, setTicket] = useState({});
   const [showModal, setShowModal] = useState(false);
-  const [agents, setAgents] = useState([])
+  const [agents, setAgents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   const columns = React.useMemo(
     () => [
@@ -72,95 +79,44 @@ function OrganizationPage() {
     []
   );
 
-  //     {
-  //       Header: "Ticket #",
-  //       columns: [
-  //         {
-  //           Header: "",
-  //           accessor: "id",
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       Header: "Inquiry Option",
-  //       columns: [
-  //         {
-  //           Header: "",
-  //           accessor: "inquiry_option",
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       Header: "Client Information",
-  //       columns: [
-  //         {
-  //           Header: "First Name",
-  //           accessor: "client_first_name",
-  //         },
-  //         {
-  //           Header: "Last Name",
-  //           accessor: "client_last_name",
-  //         },
-  //         {
-  //           Header: "Phone Number",
-  //           accessor: "client_phone_number",
-  //         },
-  //         {
-  //           Header: "E-mail",
-  //           accessor: "client_email",
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       Header: "Status",
-  //       columns: [
-  //         {
-  //           Header: "",
-  //           accessor: "status",
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       Header: "Agent Notes",
-  //       columns: [
-  //         {
-  //           Header: "",
-  //           accessor: "agent_nodes",
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       Header: "Queue #",
-  //       columns: [
-  //         {
-  //           Header: "",
-  //           accessor: "queue_number",
-  //         },
-  //       ],
-  //     },
-  //   ],
-  //   []
-  // );
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/");
+  }, [isLoggedIn]);
 
   useEffect(() => {
     axios
-      .get(urlAllTicketsByOrgIdAgentId(organizationId,agentId))
+      .get(urlAllTickets(), {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.authToken}`,
+        },
+      })
       .then((response) => {
-        // console.log(response.data[0])
         setData(response.data);
+        setIsAuthorized(true);
+        setIsLoading(false);
       })
       .catch((err) => {
+        setIsLoading(false);
         console.log(err);
       });
 
+    if (userInfo.role === "dispatcher") {
       axios
-      .get(urlAllAgentsByOrgId(organizationId))
+      .get(urlAllAgents(), {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.authToken}`,
+        },
+      })
       .then((response) => {
-        setAgents(response.data);
+        // if (response.data.length > 0) {
+          setAgents(response.data);
+        // }
       })
       .catch((err) => {
         console.log(err);
       });
+    }
+    
   }, []);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -174,7 +130,11 @@ function OrganizationPage() {
 
   const onRowClick = (row) => {
     axios
-      .get(urlTicketById(row.original.id))
+      .get(urlTicketById(row.original.id), {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.authToken}`,
+        },
+      })
       .then((response) => {
         setTicket(response.data);
         setShowModal(true);
@@ -189,9 +149,9 @@ function OrganizationPage() {
   };
 
   const submitHandler = (event) => {
-    console.log(ticket)
+    console.log(ticket);
     axios
-      .put(urlTicketById(ticket.id),ticket)
+      .put(urlTicketById(ticket.id), ticket)
       .then((response) => {
         setShowModal(false);
       })
@@ -211,6 +171,18 @@ function OrganizationPage() {
   const handleAgentChange = (event) => {
     // setTicket({ ...ticket, ["agent_id"]: event.target.value });
   };
+
+  if (isLoading) {
+    return <p>"Loading..."</p>;
+  }
+
+  if (!isAuthorized) {
+    return (
+      <p>
+        The server could not verify that you are authorized to access this page.
+      </p>
+    );
+  }
 
   return (
     <div className="organization__container">
@@ -317,7 +289,10 @@ function OrganizationPage() {
           </div>
           <div className="organization__queue-num-detail">
             <label>Agent Notes: </label>
-            <textarea value={ticket.agent_notes} onChange={handleAgentNotesChange}></textarea>
+            <textarea
+              value={ticket.agent_notes}
+              onChange={handleAgentNotesChange}
+            ></textarea>
           </div>
           <div className="organization__created-at-detail">
             <span>Created At: </span>
@@ -331,14 +306,14 @@ function OrganizationPage() {
             <span>Closed At: </span>
             <span>{ticket.closed_at}</span>
           </div>
-          <div className="organization__agent-list">
-          <span>Assigned Agent: </span>
+          {userInfo.role === "dispatcher" && <div className="organization__agent-list">
+            <span>Assigned Agent: </span>
             <select value={ticket.agent_id} onChange={handleAgentChange}>
-              {agents.map(agent => {
-                return <option key={agent.id}>{agent.id}</option>
+              {agents.map((agent) => {
+                return <option key={agent.id}>{agent.id}</option>;
               })}
             </select>
-          </div>
+          </div>}
           <button
             className="organization__modal-save-btn"
             type="submit"

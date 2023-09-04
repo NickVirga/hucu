@@ -31,25 +31,25 @@ function SignupLoginModal({
         {loginSignupMode && (
           <div className="signup-login__first-name">
             <label>First Name:</label>
-            <input></input>
+            <input name="first_name"></input>
           </div>
         )}
         {loginSignupMode && (
           <div className="signup-login__last-name">
             <label>Last Name:</label>
-            <input></input>
+            <input name="last_name"></input>
           </div>
         )}
         {loginSignupMode && (
           <div className="signup-login__phone-number">
             <label>Phone Number:</label>
-            <input></input>
+            <input name="phone_number"></input>
           </div>
         )}
         {loginSignupMode && (
           <div className="signup-login__email">
             <label>E-mail:</label>
-            <input></input>
+            <input name="email"></input>
           </div>
         )}
         <button className="signup-login__submit-btn" type="submit">

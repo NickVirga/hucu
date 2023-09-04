@@ -75,9 +75,12 @@ table {
     background-color: paleturquoise;
     position: absolute;
     top: 10rem;
+    display: flex;
+    flex-direction: column;
   }
 
   &__modal-close-btn {
+    align-self: flex-end;
     height: 1.5rem;
     width: 1.5rem;
     cursor: pointer;

@@ -8,9 +8,14 @@ import axios from "axios";
 import { urlAllTickets } from "../../utils/api-utils";
 import { useNavigate } from "react-router-dom";
 
-function InquiryPage({ userInfo }) {
+function InquiryPage({ userInfo, isLoggedIn }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    if (isLoggedIn && userInfo.role === "agent")
+      navigate(`/organization/${userInfo.organization_id}`);
+  }, [userInfo.role, isLoggedIn]);
 
   useEffect(() => {
     setFormData({
@@ -156,7 +161,6 @@ function InquiryPage({ userInfo }) {
   ];
 
   const selectHandler = (selectedKeys, { node }) => {
-    console.log(node);
     setFormData({ ...formData, inquiry_option: node.title });
   };
 
@@ -170,7 +174,7 @@ function InquiryPage({ userInfo }) {
       client_phone_number,
       client_email,
       client_notes,
-      scheduled_at
+      scheduled_at,
     }) => ({
       inquiry_option,
       client_first_name,
@@ -181,12 +185,16 @@ function InquiryPage({ userInfo }) {
       scheduled_at,
     }))(formData);
 
-    reqBody.status="Open"
+    reqBody.status = "Open";
 
     axios
-      .post(urlAllTickets(), reqBody)
+      .post(urlAllTickets(), reqBody, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.authToken}`,
+        },
+      })
       .then((response) => {
-        navigate(`/tickets/${response.data[0].id}`)
+        navigate(`/tickets/${response.data[0].id}`);
       })
       .catch((err) => {
         console.log(err);
@@ -195,7 +203,6 @@ function InquiryPage({ userInfo }) {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    console.log(value);
     setFormData({ ...formData, [name]: value });
   };
 
