@@ -69,7 +69,6 @@ function SignupLoginModal({
           {loginSignupMode && (
             <div className="signup-login__form-field">
               <label className="signup-login__form-label">Phone Number:</label>
-              {/* <input className="signup-login__form-input" name="phone_number" autocomplete="off"></input> */}
               <PhoneInput
                 id="phoneNumber"
                 name="phone_number"

@@ -52,11 +52,11 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
             accessor: "client_phone_number",
             headerClassName: "table__header-phone-number",
           },
-          {
-            Header: "E-mail",
-            accessor: "client_email",
-            headerClassName: "table__header-email",
-          },
+          // {
+          //   Header: "E-mail",
+          //   accessor: "client_email",
+          //   headerClassName: "table__header-email",
+          // },
         ],
       },
       {
@@ -215,10 +215,14 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
           className: "organization__table",
         })}
       >
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
+        <thead className="organization__table-header">
+          {headerGroups.map((headerGroup, index) => (
+            <tr
+              {...headerGroup.getHeaderGroupProps({
+                className: "organization__table-header-row",
+              })}
+            >
+              {headerGroup.headers.map((column, index) => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps(), {
                     className: column.headerClassName,
@@ -240,11 +244,26 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
         <tbody {...getTableBodyProps()}>
           {rows.map((row, i) => {
             prepareRow(row);
+            const isEven = i % 2 === 0;
+
             return (
-              <tr {...row.getRowProps()} onClick={() => onRowClick(row)}>
+              <tr
+                {...row.getRowProps({
+                  className: `organization__table-row${
+                    isEven ? "--highlight" : ""
+                  }`,
+                })}
+                onClick={() => onRowClick(row)}
+              >
                 {row.cells.map((cell) => {
                   return (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    <td
+                      {...cell.getCellProps({
+                        className: "organization__table-cell",
+                      })}
+                    >
+                      {cell.render("Cell")}
+                    </td>
                   );
                 })}
               </tr>
@@ -252,110 +271,188 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
           })}
         </tbody>
       </table>
-      <div
-        className={`organization__ticket-details-container${
-          showModal ? "--visible" : ""
-        }`}
-        onClick={outsideModalClickHandler}
-      >
+      {showModal && (
         <div
-          className="organization__ticket-details-modal"
-          onClick={(e) => e.stopPropagation()}
+          className="organization__ticket-details-container"
+          onClick={outsideModalClickHandler}
         >
-          <CloseIcon
-            className="organization__modal-close-btn"
-            onClick={outsideModalClickHandler}
-          />
-          <div className="organization__ticket-num-detail">
-            <span>Ticket #: </span>
-            <span>{ticket.id}</span>
-          </div>
-          <div className="organization__ticket-status-detail">
-            <span>Status: </span>
-            <select value={ticket.status} onChange={handleStatusChange}>
-              <option>Open</option>
-              <option>In Progress</option>
-              <option>Waiting for Customer Response</option>
-              <option>On Hold</option>
-              <option>Closed</option>
-              <option>Reopened</option>
-              <option>Cancelled</option>
-            </select>
-          </div>
-          <div className="organization__queue-num-detail">
-            <span>Queue: </span>
-            <span>{ticket.queue_number}</span>
-          </div>
-          <div className="organization__inquiry-option-detail">
-            <span>Inquiry: </span>
-            <span>{ticket.inquiry_option}</span>
-          </div>
-          <div className="organization__client-info-detail">
-            <span>Client Information</span>
-            <div className="organization__client-first-detail">
-              <span>Name: </span>
-              <span>
-                {ticket.client_last_name}, {ticket.client_first_name}
-              </span>
-            </div>
-            <div className="organization__client-phone-detail">
-              <span>Phone Number: </span>
-              <span>{ticket.client_phone_number}</span>
-            </div>
-            <div className="organization__client-email-detail">
-              <span>E-mail: </span>
-              <span>{ticket.client_email}</span>
-            </div>
-            <div className="organization__client-notes-detail">
-              <span>Notes: </span>
-              <span>{ticket.client_notes}</span>
-            </div>
-          </div>
-          <div className="organization__queue-num-detail">
-            <label>Agent Notes: </label>
-            <textarea
-              value={ticket.agent_notes}
-              onChange={handleAgentNotesChange}
-            ></textarea>
-          </div>
-          <div className="organization__created-at-detail">
-            <span>Created At: </span>
-            <span>{ticket.created_at}</span>
-          </div>
-          <div className="organization__scheduled-at-detail">
-            <span>Scheduled At: </span>
-            <span>{ticket.scheduled_at}</span>
-          </div>
-          <div className="organization__closed-at-detail">
-            <span>Closed At: </span>
-            <span>{ticket.closed_at}</span>
-          </div>
-          {userInfo.role === "dispatcher" && (
-            <div className="organization__agent-list">
-              <span>Assigned Agent: </span>
-              <select
-                value={`${ticket.last_name}, ${ticket.first_name}`}
-                onChange={handleAgentChange}
-              >
-                {agents.map((agent) => {
-                  return (
-                    <option key={agent.agent_id}>
-                      {agent.last_name}, {agent.first_name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          )}
-          <button
-            className="organization__modal-save-btn"
-            type="submit"
-            onClick={submitHandler}
+          <div
+            className="organization__ticket-details-modal"
+            onClick={(e) => e.stopPropagation()}
           >
-            Save
-          </button>
+            <div className="organization__ticket-details-header">
+              <h2 className="organization__ticket-details-title">
+                Ticket Details
+              </h2>
+              <CloseIcon
+                className="organization__modal-close-btn"
+                onClick={outsideModalClickHandler}
+              />
+            </div>
+            <form className="organization__ticket-details-form">
+              <div className="organization__ticket-details-fields">
+                <div className="organization__modal-left-container">
+                  {/* <div className="organization__client-info-container"> */}
+                    <h3 className="organization__field-label">
+                      Client Information
+                    </h3>
+                    <div className="organization__form-field">
+                      <label className="organization__field-label">
+                        First Name:{" "}
+                      </label>
+                      <input
+                        className="organization__field-input--disabled"
+                        value={ticket.client_first_name}
+                        disabled
+                      ></input>
+                    </div>
+                    <div className="organization__form-field">
+                      <label className="organization__field-label">
+                        Phone Number:{" "}
+                      </label>
+                      <input
+                        className="organization__field-input--disabled"
+                        value={ticket.client_phone_number}
+                        disabled
+                      ></input>
+                    </div>
+                    <div className="organization__form-field">
+                      <label className="organization__field-label">
+                        E-mail:{" "}
+                      </label>
+                      <input
+                        className="organization__field-input--disabled"
+                        value={ticket.client_email}
+                        disabled
+                      ></input>
+                    </div>
+                    <div className="organization__form-field">
+                      <label className="organization__field-label">
+                        Notes:{" "}
+                      </label>
+                      <textarea
+                        className="organization__form-textarea--disabled"
+                        value={ticket.client_notes}
+                        disabled
+                      ></textarea>
+                    </div>
+                  {/* </div> */}
+                </div>
+                <div className="organization__modal-right-container">
+                <h3 className="organization__field-label">
+                      Ticket #{ticket.id}
+                    </h3>
+                  <div className="organization__status-queue-container">
+                    <div className="organization__form-field-status">
+                    <label className="organization__field-label">
+                      Status:{" "}
+                    </label>
+                    <select className="organization__form-select" value={ticket.status} onChange={handleStatusChange}>
+                      <option>Open</option>
+                      <option>In Progress</option>
+                      <option>Waiting for Customer Response</option>
+                      <option>On Hold</option>
+                      <option>Closed</option>
+                      <option>Reopened</option>
+                      <option>Cancelled</option>
+                    </select>
+                  </div>
+                    <div className="organization__form-field-queue">
+                      <label className="organization__field-label">
+                        Queue #:{" "}
+                      </label>
+                      <input
+                        className="organization__field-input--disabled"
+                        value={ticket.queue_number}
+                        disabled
+                      ></input>
+                    </div>
+                  </div>
+                  
+
+                  <div className="organization__form-field">
+                    <label className="organization__field-label">
+                      Inquiry:{" "}
+                    </label>
+                    <input
+                      className="organization__field-input--disabled"
+                      value={ticket.inquiry_option}
+                      disabled
+                    ></input>
+                  </div>
+                  {userInfo.role === "dispatcher" && (
+                    <div className="organization__form-field">
+                      <label className="organization__field-label">
+                        Assigned Agent:{" "}
+                      </label>
+                      <select
+                        className="organization__form-select"
+                        value={`${ticket.last_name}, ${ticket.first_name}`}
+                        onChange={handleAgentChange}
+                      >
+                        {agents.map((agent) => {
+                          return (
+                            <option key={agent.agent_id}>
+                              {agent.last_name}, {agent.first_name}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                  )}
+                  <div className="organization__form-field">
+                    <label className="organization__field-label">
+                      Created At:{" "}
+                    </label>
+                    <input
+                      className="organization__field-input--disabled"
+                      value={ticket.created_at}
+                      disabled
+                    ></input>
+                  </div>
+                  <div className="organization__form-field">
+                    <label className="organization__field-label">
+                      Scheduled At:{" "}
+                    </label>
+                    <input
+                      className="organization__field-input--disabled"
+                      value={ticket.scheduled_at}
+                      disabled
+                    ></input>
+                  </div>
+                  <div className="organization__form-field">
+                    <label className="organization__field-label">
+                      Closed At:{" "}
+                    </label>
+                    <input
+                      className="organization__field-input--disabled"
+                      value={ticket.closed_at}
+                      disabled
+                    ></input>
+                  </div>
+                </div>
+              </div>
+              <div className="organization__form-field">
+                    <label className="organization__field-label">
+                      Agent Notes:{" "}
+                    </label>
+                    <textarea
+                      className="organization__form-textarea"
+                      value={ticket.agent_notes}
+                      onChange={handleAgentNotesChange}
+                    ></textarea>
+                  </div>
+              <button
+                className="organization__modal-save-btn"
+                type="submit"
+                onClick={submitHandler}
+              >
+                Save
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

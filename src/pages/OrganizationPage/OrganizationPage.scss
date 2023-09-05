@@ -1,46 +1,5 @@
-table {
-  border-spacing: 0;
-  border: 1px solid black;
-
-  tr {
-    :last-child {
-      td {
-        border-bottom: 0;
-      }
-    }
-  }
-
-  th,
-  td {
-    margin: 0;
-    // padding: 0.25rem;
-    border-bottom: 1px solid black;
-    border-right: 1px solid black;
-
-    :last-child {
-      border-right: 0;
-    }
-  }
-
-  //   thead > tr:first-child > th{
-  //     border-right: none;
-  //   }
-
-  tbody > tr {
-    cursor: pointer;
-
-    &:hover {
-      background-color: lavender;
-    }
-  }
-}
-
-// .table {
-//     &__header-client-info {
-//         border-right: 1px solid black;
-//         border-left: 1px solid black;
-//       }
-// }
+@use "../../styles/partials/variables" as *;
+@use "../../styles/partials/mixins" as *;
 
 .organization {
   &__container {
@@ -50,33 +9,92 @@ table {
   }
 
   &__table {
-    margin-right: auto;
+    font-size: 0.75rem;
+    margin: 0 1rem;
+    border-spacing: 0;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+    @include desktop {
+      font-size: 1rem;
+    }
+  }
+
+  &__table-header {
+    background-color: $primary-color2;
+
+    th:first-child {
+      padding-left: 1rem;
+    }
+
+    th:last-child {
+      padding-right: 1rem;
+    }
+  }
+
+  &__table-header-row {
+    // padding: 0 1rem;
+  }
+
+  &__table-row {
+    background-color: rgba(255, 255, 255, 1);
+    height: 2rem;
+    border-bottom: 1px solid $primary-color2;
+    cursor: pointer;
+
+    td:first-child {
+      padding-left: 1rem;
+    }
+
+    td:last-child {
+      padding-right: 1rem;
+    }
+
+    &--highlight {
+      @extend .organization__table-row;
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    &:hover {
+      font-weight: 600;
+    }
+  }
+
+  &__table-cell {
+    text-align: center;
   }
 
   &__ticket-details-container {
-    display: none;
+    display: flex;
+    justify-content: center;
     width: 100vw;
     height: 100vh;
     position: fixed;
     top: 0;
-    background-color: rgba(255, 255, 255, 0.3);
-
-    &--visible {
-      @extend .organization__ticket-details-container;
-      display: flex;
-      justify-content: center;
-    }
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 1;
   }
 
   &__ticket-details-modal {
-    width: 500px;
-    height: 500px;
-    border: 1px solid white;
-    background-color: paleturquoise;
+    margin: 1rem;
+    padding: 1rem;
+    width: 90%;
+    border: 1px solid $primary-color3;
+    background-color: $background-color1;
     position: absolute;
-    top: 10rem;
+    top: 1rem;
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
+    max-width: 34.375rem;
+  }
+
+  &__ticket-details-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__ticket-details-title {
+    user-select: none;
   }
 
   &__modal-close-btn {
@@ -84,15 +102,140 @@ table {
     height: 1.5rem;
     width: 1.5rem;
     cursor: pointer;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     path,
     circle {
-      stroke: red;
+      stroke: $primary-color1;
     }
 
     &:hover {
-      fill: red;
+      fill: $primary-color2;
     }
   }
+
+  &__modal-save-btn {
+    font-family: "Figtree";
+    cursor: pointer;
+    user-select: none;
+    color: $primary-color1;
+    background-color: $primary-color2;
+    border-radius: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    border: none;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    margin-top: 1rem;
+    margin-left: auto;
+    width: 6rem;
+
+    &:hover {
+      background-color: rgba($primary-color2, 0.7);
+    }
+  }
+
+  &__ticket-details-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__ticket-details-fields {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &__modal-left-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 50%;
+  }
+
+  &__modal-right-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 50%;
+  }
+
+  &__status-queue-container {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &__form-field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__form-field-status {
+    display: flex;
+    flex-direction: column;
+    width: 65%;
+  }
+
+  &__form-field-queue {
+    display: flex;
+    flex-direction: column;
+    width: calc(35% - 1rem);
+  }
+
+  &__field-label {
+    font-size: 0.875rem;
+    color: $primary-color1;
+    user-select: none;
+  }
+
+  &__field-input {
+    font-family: "Figtree";
+    border: 1px solid $secondary-color2;
+    color: $primary-color1;
+
+    &:focus {
+      outline-style: none;
+      border: 1px solid $primary-color2;
+    }
+
+    &--disabled {
+      font-family: "Figtree";
+      border: none;
+      background-color: $secondary-color2;
+      color: $primary-color1;
+    }
+  }
+
+  &__form-textarea {
+    @extend .organization__field-input;
+    padding: 0.25rem 0.25rem;
+    resize: none;
+    overflow: hidden;
+
+    &--disabled {
+      @extend .organization__field-input;
+      padding: 0.25rem 0.25rem;
+      height: 4rem;
+      resize: none;
+      overflow: hidden;
+      border: 1px solid $primary-color1;
+      background-color: $secondary-color2;
+      color: $primary-color1;
+      border: none;
+    }
+  }
+
+  &__form-select {
+    font-family: "Figtree";
+    border: 1px solid $secondary-color2;
+    color: $primary-color1;
+
+    &:focus {
+      outline-style: none;
+      border: 1px solid $primary-color2;
+    }
+
+  }
+
 
   &__loading {
     padding: 0rem 4rem 30rem 4rem;
