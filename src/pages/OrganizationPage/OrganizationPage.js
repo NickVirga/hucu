@@ -2,7 +2,7 @@ import "./OrganizationPage.scss";
 import React from "react";
 import { useTable, useSortBy } from "react-table";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   urlAllTickets,
   urlAllAgents,
@@ -13,7 +13,6 @@ import { ReactComponent as CloseIcon } from "../../assets/icons/close-circle-svg
 
 function OrganizationPage({ userInfo, isLoggedIn }) {
   const navigate = useNavigate();
-  const { organizationId } = useParams();
   const [data, setData] = useState([]);
   const [ticket, setTicket] = useState({});
   const [showModal, setShowModal] = useState(false);
@@ -52,11 +51,6 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
             accessor: "client_phone_number",
             headerClassName: "table__header-phone-number",
           },
-          // {
-          //   Header: "E-mail",
-          //   accessor: "client_email",
-          //   headerClassName: "table__header-email",
-          // },
         ],
       },
       {
@@ -80,9 +74,9 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
 
   useEffect(() => {
     if (!isLoggedIn) navigate("/");
-  }, [isLoggedIn]);
+  });
 
-  useEffect(() => {
+  const fetchTickets = () => {
     axios
       .get(urlAllTickets(), {
         headers: {
@@ -98,21 +92,23 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
         setIsLoading(false);
         console.log(err);
       });
+  };
 
-    if (userInfo.role === "dispatcher") {
-      axios
-        .get(urlAllAgents(), {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.authToken}`,
-          },
-        })
-        .then((response) => {
-          setAgents(response.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+  useEffect(() => {
+    fetchTickets();
+
+    axios
+      .get(urlAllAgents(), {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.authToken}`,
+        },
+      })
+      .then((response) => {
+        setAgents(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -145,6 +141,8 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
   };
 
   const submitHandler = (event) => {
+    event.preventDefault();
+
     const reqBody = (({
       agent_id,
       agent_notes,
@@ -155,7 +153,6 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
       client_phone_number,
       id,
       inquiry_option,
-      scheduled_at,
       status,
     }) => ({
       agent_id,
@@ -167,9 +164,10 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
       client_phone_number,
       id,
       inquiry_option,
-      scheduled_at,
       status,
     }))(ticket);
+    console.log(ticket);
+    console.log(reqBody);
     axios
       .put(urlTicketById(ticket.id), reqBody, {
         headers: {
@@ -177,6 +175,7 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
         },
       })
       .then((response) => {
+        fetchTickets();
         setShowModal(false);
       })
       .catch((err) => {
@@ -185,15 +184,25 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
   };
 
   const handleStatusChange = (event) => {
-    setTicket({ ...ticket, ["status"]: event.target.value });
+    setTicket({ ...ticket, status: event.target.value });
   };
 
   const handleAgentNotesChange = (event) => {
-    setTicket({ ...ticket, ["agent_notes"]: event.target.value });
+    setTicket({ ...ticket, agent_notes: event.target.value });
   };
 
   const handleAgentChange = (event) => {
-    // setTicket({ ...ticket, ["agent_id"]: event.target.value });
+    const newAgentId =
+      event.target.options[event.target.selectedIndex].getAttribute(
+        "data-agent-id"
+      );
+    const newAgentName = event.target.value.split(", ");
+    setTicket({
+      ...ticket,
+      agent_id: newAgentId,
+      first_name: newAgentName[1],
+      last_name: newAgentName[0],
+    });
   };
 
   if (isLoading) {
@@ -292,71 +301,71 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
             <form className="organization__ticket-details-form">
               <div className="organization__ticket-details-fields">
                 <div className="organization__modal-left-container">
-                  {/* <div className="organization__client-info-container"> */}
-                    <h3 className="organization__field-label">
-                      Client Information
-                    </h3>
-                    <div className="organization__form-field">
-                      <label className="organization__field-label">
-                        First Name:{" "}
-                      </label>
-                      <input
-                        className="organization__field-input--disabled"
-                        value={ticket.client_first_name}
-                        disabled
-                      ></input>
-                    </div>
-                    <div className="organization__form-field">
-                      <label className="organization__field-label">
-                        Phone Number:{" "}
-                      </label>
-                      <input
-                        className="organization__field-input--disabled"
-                        value={ticket.client_phone_number}
-                        disabled
-                      ></input>
-                    </div>
-                    <div className="organization__form-field">
-                      <label className="organization__field-label">
-                        E-mail:{" "}
-                      </label>
-                      <input
-                        className="organization__field-input--disabled"
-                        value={ticket.client_email}
-                        disabled
-                      ></input>
-                    </div>
-                    <div className="organization__form-field">
-                      <label className="organization__field-label">
-                        Notes:{" "}
-                      </label>
-                      <textarea
-                        className="organization__form-textarea--disabled"
-                        value={ticket.client_notes}
-                        disabled
-                      ></textarea>
-                    </div>
-                  {/* </div> */}
+                  <h3 className="organization__field-label">
+                    Client Information
+                  </h3>
+                  <div className="organization__form-field">
+                    <label className="organization__field-label">
+                      First Name:{" "}
+                    </label>
+                    <input
+                      className="organization__field-input--disabled"
+                      value={ticket.client_first_name}
+                      disabled
+                    ></input>
+                  </div>
+                  <div className="organization__form-field">
+                    <label className="organization__field-label">
+                      Phone Number:{" "}
+                    </label>
+                    <input
+                      className="organization__field-input--disabled"
+                      value={ticket.client_phone_number}
+                      disabled
+                    ></input>
+                  </div>
+                  <div className="organization__form-field">
+                    <label className="organization__field-label">
+                      E-mail:{" "}
+                    </label>
+                    <input
+                      className="organization__field-input--disabled"
+                      value={ticket.client_email}
+                      disabled
+                    ></input>
+                  </div>
+                  <div className="organization__form-field">
+                    <label className="organization__field-label">Notes: </label>
+                    <textarea
+                      className="organization__form-textarea--disabled"
+                      value={ticket.client_notes || ""}
+                      disabled
+                    ></textarea>
+                  </div>
                 </div>
                 <div className="organization__modal-right-container">
-                <h3 className="organization__field-label">
-                      Ticket #{ticket.id}
-                    </h3>
+                  <h3 className="organization__field-label">
+                    Ticket #{ticket.id}
+                  </h3>
                   <div className="organization__status-queue-container">
                     <div className="organization__form-field-status">
-                    <label className="organization__field-label">
-                      Status:{" "}
-                    </label>
-                    <select className="organization__form-select" value={ticket.status} onChange={handleStatusChange}>
-                      <option>Open</option>
-                      <option>In Progress</option>
-                      <option>Waiting for Customer Response</option>
-                      <option>On Hold</option>
-                      <option>Closed</option>
-                      <option>Reopened</option>
-                      <option>Cancelled</option>
-                    </select>
-                  </div>
+                      <label className="organization__field-label">
+                        Status:{" "}
+                      </label>
+                      <select
+                        className="organization__form-select"
+                        value={ticket.status}
+                        onChange={handleStatusChange}
+                      >
+                        <option>Open</option>
+                        <option>In Progress</option>
+                        <option>Waiting for Customer Response</option>
+                        <option>On Hold</option>
+                        <option>Closed</option>
+                        <option>Reopened</option>
+                        <option>Cancelled</option>
+                      </select>
+                    </div>
                     <div className="organization__form-field-queue">
                       <label className="organization__field-label">
                         Queue #:{" "}
@@ -368,7 +377,6 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
                       ></input>
                     </div>
                   </div>
-                  
 
                   <div className="organization__form-field">
                     <label className="organization__field-label">
@@ -390,9 +398,10 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
                         value={`${ticket.last_name}, ${ticket.first_name}`}
                         onChange={handleAgentChange}
                       >
+                      <option value="">Select an agent</option> 
                         {agents.map((agent) => {
                           return (
-                            <option key={agent.agent_id}>
+                            <option key={agent.id} data-agent-id={agent.id}>
                               {agent.last_name}, {agent.first_name}
                             </option>
                           );
@@ -416,7 +425,7 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
                     </label>
                     <input
                       className="organization__field-input--disabled"
-                      value={ticket.scheduled_at}
+                      value={ticket.scheduled_at || ""}
                       disabled
                     ></input>
                   </div>
@@ -426,22 +435,22 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
                     </label>
                     <input
                       className="organization__field-input--disabled"
-                      value={ticket.closed_at}
+                      value={ticket.closed_at || ""}
                       disabled
                     ></input>
                   </div>
                 </div>
               </div>
               <div className="organization__form-field">
-                    <label className="organization__field-label">
-                      Agent Notes:{" "}
-                    </label>
-                    <textarea
-                      className="organization__form-textarea"
-                      value={ticket.agent_notes}
-                      onChange={handleAgentNotesChange}
-                    ></textarea>
-                  </div>
+                <label className="organization__field-label">
+                  Agent Notes:{" "}
+                </label>
+                <textarea
+                  className="organization__form-textarea"
+                  value={ticket.agent_notes || ""}
+                  onChange={handleAgentNotesChange}
+                ></textarea>
+              </div>
               <button
                 className="organization__modal-save-btn"
                 type="submit"

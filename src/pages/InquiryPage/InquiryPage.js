@@ -215,6 +215,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
     }))(formData);
 
     reqBody.status = "Open";
+    reqBody.organization_id = 1;
 
     axios
       .post(urlAllTickets(), reqBody, {
@@ -260,6 +261,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
 
   return (
     <div className="inquiries__container">
+      <div className="inquiries__tree-search-container">
       <input
         className="inquiries__search"
         type="text"
@@ -276,6 +278,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
         switcherIcon={getSwitcherIcon}
         className="inquiries__tree"
       />
+      </div>
       <form className="inquiries__form" onSubmit={handleFormSubmit}>
         <div className="inquiries__form-field">
           <label className="inquiries__form-label" htmlFor="inquiryOption">

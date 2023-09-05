@@ -32,7 +32,7 @@ function TicketStatusPage( { isLoggedIn }) {
         setTicket(response.data);
         setIsAuthorized(true);
         setIsLoading(false);
-        if (!hasInitialTicketsAhead) {
+        if (!hasInitialTicketsAhead && showQueue) {
           hasInitialTicketsAhead = true;
         setInitialTicketsAhead(response.data.ticket_count)
       }
