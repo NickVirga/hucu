@@ -188,7 +188,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
   };
 
   const selectHandler = (selectedKeys, {node}) => {
-    setFormData({...formData, ["inquiry_option"]: node.title})
+    setFormData({...formData, inquiry_option: node.title})
 
   };
 

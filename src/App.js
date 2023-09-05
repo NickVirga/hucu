@@ -117,13 +117,7 @@ function App() {
           path="/"
           element={<InquiryPage userInfo={userInfo} isLoggedIn={isLoggedIn} />}
         />
-        {/* <Route path="/inquiries" element={<InquiryPage />} />
-        <Route path="/inquiries/:inquiryId" element={<InquiryPage />} /> */}
         <Route path="/tickets/:ticketId" element={<TicketStatusPage  isLoggedIn={isLoggedIn}/>} />
-        {/* <Route
-          path="/organization"
-          element={<OrganizationPage isLoggedIn={isLoggedIn} />}
-        /> */}
         <Route
           path="/organization/:organizationId"
           element={

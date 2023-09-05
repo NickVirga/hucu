@@ -1,70 +1,117 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# HUCU
 
-## Available Scripts
+HUCU is a digital alternative to getting lost in phone trees and waiting on hold. Have Us Call U
+instead. Users are able to search and select what their inquiring about and schedule a time
+that works best for them. HUCU allow dispatchers to assign tickets to agents and monitor
+queue progress. Agents can manage all their assigned tickets in one place.
 
-In the project directory, you can run:
+HUCU is full-stack app built using React and Node.js. The app was build as a capstone project for the software enginering program at BrainStation (June 2023 Online cohort). The app leverages the rc-tree and react-table packages to help create a rich and responsive user experience. 
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Acknowledgements
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+ - [Awesome Readme Templates](https://readme.so/editor)
+ - [BrainStation](https://brainstation.io/)
+ - [Super cool CSS Progress Bars with stripe animations](https://css-tricks.com/css3-progress-bars/)
+ 
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Authors
 
-### `npm run build`
+- [@NickVirga](https://github.com/NickVirga)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Features
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- User ticket submission
+- Agent/dispatcher ticket management
+- Login/Signup - access profile information for easier ticket creation
+- Dynamic ticket queue - real-time updates
+- Multi-role user authentication - user and organization data secure
+- Responsive design for mobile/tablet/desktop
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Environment Variables
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+To run this project, you will need to add the following environment variables to your .env file
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Front-end React:
 
-## Learn More
+`REACT_APP_BASE_URL`    
+e.g.  `REACT_APP_BASE_URL=http://localhost:8080`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Back-end Node:
 
-### Code Splitting
+`PORT`
+`DB_HOST=127.0.0.1`
+`DB_NAME`
+`DB_USER`
+`DB_PASSWORD`
+`CORS_ORIGIN`
+`JWT_SECRET_KEY`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+e.g. `PORT=8080`
+`DB_HOST=127.0.0.1`
+`DB_NAME`
+`DB_USER`
+`DB_PASSWORD`
+`CORS_ORIGIN=http://localhost:3000`
+`JWT_SECRET_KEY`
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Installation and Running Locally
 
-### Making a Progressive Web App
+Clone the front-end React app:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+  git clone https://github.com/NickVirga/hucu
+```
+    
+Clone the back-end Node.js:
 
-### Advanced Configuration
+```bash
+  git clone https://github.com/NickVirga/hucu-api
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Navigate to both directories:
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```bash
+   cd directory
+```
 
-### `npm run build` fails to minify
+Install dependencies for both:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+   npm install
+```
+
+Run react app:
+
+```bash
+   npm start
+```
+
+Run node server:
+
+```bash
+   node index.js
+```
+## Lessons Learned
+
+Using libraries to save time can sometimes not save time at all. Using the rc-tree and react-table packages probably took time to figure out such that I could've probably made my own  solution from scratch.
+
+
+## Roadmap
+
+- Add support for multiple organizations
+
+- 2FA in the form of e-mail or SMS
+
+- sign-up as an agent or dispatcher for an organizations
+
+- enable dispatchers to add entries to inquiry options
+

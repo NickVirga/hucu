@@ -1,7 +1,7 @@
 import "./SignupLoginModal.scss";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { ReactComponent as CloseIcon } from "../../assets/icons/close-circle-svgrepo-com.svg";
+import { ReactComponent as CloseIcon } from "../../assets/icons/close-circle.svg";
 import { useState } from "react";
 
 function SignupLoginModal({
@@ -32,7 +32,7 @@ function SignupLoginModal({
             <input
               className="signup-login__form-input"
               name="username"
-              autocomplete="off"
+              autoComplete="off"
             ></input>
           </div>
 
@@ -41,7 +41,7 @@ function SignupLoginModal({
             <input
               className="signup-login__form-input"
               name="password"
-              autocomplete="off"
+              autoComplete="off"
               type="password"
             ></input>
           </div>
@@ -52,7 +52,7 @@ function SignupLoginModal({
               <input
                 className="signup-login__form-input"
                 name="first_name"
-                autocomplete="off"
+                autoComplete="off"
               ></input>
             </div>
           )}
@@ -62,7 +62,7 @@ function SignupLoginModal({
               <input
                 className="signup-login__form-input"
                 name="last_name"
-                autocomplete="off"
+                autoComplete="off"
               ></input>
             </div>
           )}
@@ -85,7 +85,7 @@ function SignupLoginModal({
               <input
                 className="signup-login__form-input"
                 name="email"
-                autocomplete="off"
+                autoComplete="off"
               ></input>
             </div>
           )}

@@ -1,5 +1,5 @@
 import "./Header.scss";
-import logo from "../../assets/logos/hucu-logo.svg";
+// import logo from "../../assets/logos/hucu-logo.svg"; // add better logo below in future
 import { Link } from "react-router-dom";
 
 function Header({ loginoutClickHandler, isLoggedIn, userInfo }) {
@@ -7,14 +7,14 @@ function Header({ loginoutClickHandler, isLoggedIn, userInfo }) {
     <div className="header__container">
       <Link className="header__logo-link" to="/">
         <div className="header__logo">
-          {/* <img className="header__logo-image" src={logo}></img> */}
+          {/* <img className="header__logo-image" src={logo}></img> */} 
           <h1 className="header__title">HUCU</h1>
         </div>
       </Link>
 
       <div className="header__user-container">
         {isLoggedIn && (
-          <img className="header__user-avatar" src={userInfo.avatar}></img>
+          <img className="header__user-avatar" src={userInfo.avatar} alt="user avatar"></img>
         )}
         {isLoggedIn && (
           <span className="header__username">{userInfo.username}</span>

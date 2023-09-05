@@ -9,7 +9,7 @@ import {
   urlTicketById,
 } from "../../utils/api-utils";
 import { useState, useEffect } from "react";
-import { ReactComponent as CloseIcon } from "../../assets/icons/close-circle-svgrepo-com.svg";
+import { ReactComponent as CloseIcon } from "../../assets/icons/close-circle.svg";
 
 function OrganizationPage({ userInfo, isLoggedIn }) {
   const navigate = useNavigate();
@@ -166,8 +166,7 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
       inquiry_option,
       status,
     }))(ticket);
-    console.log(ticket);
-    console.log(reqBody);
+
     axios
       .put(urlTicketById(ticket.id), reqBody, {
         headers: {
