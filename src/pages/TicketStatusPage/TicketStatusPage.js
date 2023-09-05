@@ -21,6 +21,12 @@ function TicketStatusPage( { isLoggedIn }) {
     if (!isLoggedIn) navigate("/");
   }, [isLoggedIn]);
 
+  useEffect(() => {
+    if (ticket.agent_id) {
+      setShowQueue(true);
+    }
+  }, [ticket.agent_id]);
+
   const fetchTicketData = () => {
     axios
       .get(urlTicketById(ticketId), {
@@ -30,9 +36,12 @@ function TicketStatusPage( { isLoggedIn }) {
       })
       .then((response) => {
         setTicket(response.data);
+        console.log(response.data)
         setIsAuthorized(true);
         setIsLoading(false);
-        if (!hasInitialTicketsAhead && showQueue) {
+        console.log("fetch,hasInitialTicketsAhead: ", hasInitialTicketsAhead)
+        console.log("fetch,agent_id: ", ticket.agent_id)
+        if (!hasInitialTicketsAhead && response.data.agent_id) {
           hasInitialTicketsAhead = true;
         setInitialTicketsAhead(response.data.ticket_count)
       }
@@ -44,12 +53,6 @@ function TicketStatusPage( { isLoggedIn }) {
   };
 
   useEffect(() => {
-    if (ticket.agent_id) {
-      setShowQueue(true);
-    }
-  }, [ticket.agent_id]);
-
-  useEffect(() => {
     fetchTicketData();
 
     const intervalId = setInterval(fetchTicketData, 5000);
@@ -58,8 +61,14 @@ function TicketStatusPage( { isLoggedIn }) {
   }, [ticketId]);
 
   useEffect(() => {
+    console.log("initialTicketsAhead: ", initialTicketsAhead)
+    console.log("ticket.ticket_count: ", ticket.ticket_count)
+    console.log("hasInitialTicketsAhead ", hasInitialTicketsAhead)
+    console.log("showQueue ", showQueue)
+    if (showQueue) {
     setProgressPercentage(10 + (initialTicketsAhead-ticket.ticket_count)/initialTicketsAhead * 90)
-  }, [ticket.ticket_count]);
+    }
+  }, [ticket.ticket_count, showQueue]);
 
   const spanStyle = {
     width: `${progressPercentage}%`
