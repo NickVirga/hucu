@@ -148,8 +148,6 @@ function InquiryPage({ userInfo, isLoggedIn }) {
   const [formData, setFormData] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTreeData, setFilteredTreeData] = useState(treeData);
-  const [selectedNodeKeys, setSelectedNodeKeys] = useState([]);
-  const [selectedNodePath, setSelectedNodePath] = useState([]);
 
   useEffect(() => {
     if (
@@ -274,7 +272,6 @@ function InquiryPage({ userInfo, isLoggedIn }) {
         selectable
         treeData={filteredTreeData}
         onSelect={selectHandler}
-        selectedKeys={selectedNodeKeys}
         showIcon={false}
         switcherIcon={getSwitcherIcon}
         className="inquiries__tree"

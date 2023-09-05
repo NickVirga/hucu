@@ -84,14 +84,21 @@ table {
     height: 1.5rem;
     width: 1.5rem;
     cursor: pointer;
-    path, circle {
-        stroke: red;
+    path,
+    circle {
+      stroke: red;
     }
 
     &:hover {
-        fill: red;
+      fill: red;
     }
-
   }
 
+  &__loading {
+    padding: 0rem 4rem 30rem 4rem;
+  }
+
+  &__authorize {
+    padding: 0rem 4rem 30rem 4rem;
+  }
 }

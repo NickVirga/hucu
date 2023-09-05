@@ -197,12 +197,12 @@ function OrganizationPage({ userInfo, isLoggedIn }) {
   };
 
   if (isLoading) {
-    return <p>"Loading..."</p>;
+    return <p className="organization__loading">"Loading..."</p>;
   }
 
   if (!isAuthorized) {
     return (
-      <p>
+      <p className="organization__authorize">
         The server could not verify that you are authorized to access this page.
       </p>
     );
