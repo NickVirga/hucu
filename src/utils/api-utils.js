@@ -10,6 +10,10 @@ export const urlAllAgents = () => {
   return `${process.env.REACT_APP_BASE_URL}/api/agents`;
 };
 
+export const urlAllOrganizations = () => {
+  return `${process.env.REACT_APP_BASE_URL}/api/organizations`
+}
+
 export const urlSignup = () => {
   return `${process.env.REACT_APP_BASE_URL}/api/auth/signup`;
 };
@@ -21,3 +25,4 @@ export const urlLogin = () => {
 export const urlUsers = () => {
   return `${process.env.REACT_APP_BASE_URL}/api/users`;
 };
+

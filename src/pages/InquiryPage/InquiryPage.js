@@ -5,7 +5,7 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { urlAllTickets } from "../../utils/api-utils";
+import { urlAllOrganizations, urlAllTickets } from "../../utils/api-utils";
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as PlusIcon } from "../../assets/icons/plus-icon.svg";
 import { ReactComponent as MinusIcon } from "../../assets/icons/minus-icon.svg";
@@ -145,6 +145,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
   ];
 
   const navigate = useNavigate();
+  const [orgData, setOrgData] = useState(null);
   const [formData, setFormData] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTreeData, setFilteredTreeData] = useState(treeData);
@@ -156,6 +157,12 @@ function InquiryPage({ userInfo, isLoggedIn }) {
     )
       navigate(`/organization/${userInfo.organization_id}`);
   }, [userInfo.role, isLoggedIn]);
+
+  useEffect(() => {
+    axios.get(urlAllOrganizations()).then((response) => {
+      setOrgData(response.data);
+    });
+  },[]);
 
   useEffect(() => {
     setFormData({
@@ -187,11 +194,9 @@ function InquiryPage({ userInfo, isLoggedIn }) {
       .filter(Boolean);
   };
 
-  const selectHandler = (selectedKeys, {node}) => {
-    setFormData({...formData, inquiry_option: node.title})
-
+  const selectHandler = (selectedKeys, { node }) => {
+    setFormData({ ...formData, inquiry_option: node.title });
   };
-
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -224,7 +229,6 @@ function InquiryPage({ userInfo, isLoggedIn }) {
         },
       })
       .then((response) => {
-        console.log(response.data);
         navigate(`/tickets/${response.data.id}`);
       })
       .catch((err) => {
@@ -261,23 +265,31 @@ function InquiryPage({ userInfo, isLoggedIn }) {
 
   return (
     <div className="inquiries__container">
+      <div className="inquiries__organization-search-container">
+        <select>
+          <option value="">Select an organization...</option>
+          {orgData.map(org => {
+            return <option value={org.name}>{org.name}</option>
+          })}
+        </select>
+      </div>
       <div className="inquiries__tree-search-container">
-      <input
-        className="inquiries__search"
-        type="text"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        placeholder="Search..."
-      ></input>
-      <Tree
-        showLine
-        selectable
-        treeData={filteredTreeData}
-        onSelect={selectHandler}
-        showIcon={false}
-        switcherIcon={getSwitcherIcon}
-        className="inquiries__tree"
-      />
+        <input
+          className="inquiries__search"
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="Search..."
+        ></input>
+        <Tree
+          showLine
+          selectable
+          treeData={filteredTreeData}
+          onSelect={selectHandler}
+          showIcon={false}
+          switcherIcon={getSwitcherIcon}
+          className="inquiries__tree"
+        />
       </div>
       <form className="inquiries__form" onSubmit={handleFormSubmit}>
         <div className="inquiries__form-field">
