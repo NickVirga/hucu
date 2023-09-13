@@ -149,6 +149,9 @@ function InquiryPage({ userInfo, isLoggedIn }) {
   const [formData, setFormData] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTreeData, setFilteredTreeData] = useState(treeData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [orgIsSelected, setOrgIsSelected] = useState(false)
+  const [selectedOrg, setSelectedOrg] = useState("")
 
   useEffect(() => {
     if (
@@ -160,9 +163,20 @@ function InquiryPage({ userInfo, isLoggedIn }) {
 
   useEffect(() => {
     axios.get(urlAllOrganizations()).then((response) => {
-      setOrgData(response.data);
+      const sortedOrgs = response.data.sort((a,b) => a.name.localeCompare(b.name))
+      setOrgData(sortedOrgs);
+      setIsLoading(false);
     });
   },[]);
+
+  const handleOrgChange = (event) => {
+    const newOrgId =
+      event.target.options[event.target.selectedIndex].getAttribute(
+        "id"
+      );
+    setSelectedOrg(newOrgId)
+    setOrgIsSelected(true)
+  }
 
   useEffect(() => {
     setFormData({
@@ -263,17 +277,20 @@ function InquiryPage({ userInfo, isLoggedIn }) {
     setFilteredTreeData(filterData(treeData, searchTerm));
   }, [searchTerm]);
 
+
+  if (isLoading) return <p>Loading...</p>
+
   return (
     <div className="inquiries__container">
-      <div className="inquiries__organization-search-container">
-        <select>
-          <option value="">Select an organization...</option>
+      <div className="inquiries__organization-select-container">
+        <select className="inquiries__organization-select" value={selectedOrg} onChange={handleOrgChange}>
+          {!orgIsSelected && <option value="">Select an organization</option>}
           {orgData.map(org => {
-            return <option value={org.name}>{org.name}</option>
+            return <option key={org.id} id={org.id} value={org.name}>{org.name}</option>
           })}
         </select>
       </div>
-      <div className="inquiries__tree-search-container">
+      {orgIsSelected && <div className="inquiries__tree-search-container">
         <input
           className="inquiries__search"
           type="text"
@@ -290,8 +307,8 @@ function InquiryPage({ userInfo, isLoggedIn }) {
           switcherIcon={getSwitcherIcon}
           className="inquiries__tree"
         />
-      </div>
-      <form className="inquiries__form" onSubmit={handleFormSubmit}>
+      </div>}
+      {orgIsSelected && <form className="inquiries__form" onSubmit={handleFormSubmit}>
         <div className="inquiries__form-field">
           <label className="inquiries__form-label" htmlFor="inquiryOption">
             Inquiry Option:
@@ -398,7 +415,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
         <button className="inquiries__form-submit-btn" type="submit">
           Submit
         </button>
-      </form>
+      </form>}
     </div>
   );
 }
