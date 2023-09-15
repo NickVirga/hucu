@@ -14,6 +14,10 @@ export const urlAllOrganizations = () => {
   return `${process.env.REACT_APP_BASE_URL}/api/organizations`
 }
 
+export const urlInquiryOptionsByOrgId = (orgId) => {
+   return `${process.env.REACT_APP_BASE_URL}/api/inquiry-options/${orgId}`
+}
+
 export const urlSignup = () => {
   return `${process.env.REACT_APP_BASE_URL}/api/auth/signup`;
 };
