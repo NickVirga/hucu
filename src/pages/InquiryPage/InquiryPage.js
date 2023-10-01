@@ -20,6 +20,7 @@ function InquiryPage({ userInfo, isLoggedIn }) {
   const [treeData, setTreeData] = useState(null);
   const [formData, setFormData] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
+  const [expandedKeys, setExpandedKeys] = useState([]);
   const [filteredTreeData, setFilteredTreeData] = useState(treeData);
   const [isLoading, setIsLoading] = useState(true);
   const [orgIsSelected, setOrgIsSelected] = useState(false);
@@ -84,6 +85,27 @@ function InquiryPage({ userInfo, isLoggedIn }) {
       .filter(Boolean);
   };
 
+  // get all keys from tree data
+  const getAllKeys = (treeData) => {
+    const keys = [];
+
+    const traverse = (node) => {
+      keys.push(node.key);
+
+      if (node.children && node.children.length > 0) {
+        node.children.forEach((child) => {
+          traverse(child);
+        });
+      }
+    };
+
+    treeData.forEach((node) => {
+      traverse(node);
+    });
+
+    return keys;
+  };
+
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -91,7 +113,14 @@ function InquiryPage({ userInfo, isLoggedIn }) {
   // filter tree data whenever search term changes
   useEffect(() => {
     if (treeData) {
-      setFilteredTreeData(filterData(treeData, searchTerm));
+      const filteredData = filterData(treeData, searchTerm);
+      setFilteredTreeData(filteredData);
+
+      if (searchTerm === "") {
+        setExpandedKeys([]);
+      } else {
+        setExpandedKeys(getAllKeys(filteredData));
+      }
     }
   }, [searchTerm]);
 
@@ -228,6 +257,8 @@ function InquiryPage({ userInfo, isLoggedIn }) {
             showIcon={false}
             switcherIcon={getSwitcherIcon}
             className="inquiries__tree"
+            expandedKeys={expandedKeys}
+            onExpand={(keys) => setExpandedKeys(keys)}
           />
         </div>
       )}
